@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - data/authentication_service.dart</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">data</a> - authentication_service.dart<span style="font-size: 80%;"> (source / <a href="authentication_service.dart.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2021-04-20 21:59:19</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : import 'dart:async';</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            : import 'package:amplify_flutter/amplify_hub.dart';
+<span class="lineNum">       4 </span>            : import 'package:amplify_flutter/categories/amplify_categories.dart';
+<span class="lineNum">       5 </span>            : import 'package:meta/meta.dart';
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : import 'package:amplify_flutter/amplify.dart';
+<span class="lineNum">       8 </span>            : import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+<span class="lineNum">       9 </span>            : import 'package:teamexcel_flutter/domain/authentication/authentication.dart';
+<span class="lineNum">      10 </span>            : import '../models/user.dart';
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            : typedef void AuthListener(dynamic event);
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : abstract class AuthenticationService {
+<span class="lineNum">      15 </span>            :   Future&lt;bool&gt; signIn({@required String username, @required String password});
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            :   Future&lt;bool&gt; signOut();
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :   Future&lt;User&gt; getCurrentUser();
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :   Stream&lt;User&gt; getUserStream();
+<span class="lineNum">      22 </span>            : }
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : class AmplifyAuthenticationService implements AuthenticationService {
+<span class="lineNum">      25 </span>            :   StreamController&lt;User&gt; userStreamController;
+<span class="lineNum">      26 </span>            :   AuthCategory _authServiceInterface;
+<span class="lineNum">      27 </span>            :   AmplifyHub _authMessageBus;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span><span class="lineCov">          1 :   AmplifyAuthenticationService({</span>
+<span class="lineNum">      30 </span>            :     @required AuthCategory authServiceInterface,
+<span class="lineNum">      31 </span>            :     @required AmplifyHub authMessageBus,
+<span class="lineNum">      32 </span>            :   }) {
+<span class="lineNum">      33 </span>            :     if (authServiceInterface == null || authMessageBus == null) {
+<span class="lineNum">      34 </span><span class="lineCov">          1 :       throw BadAuthenticationInterfaceFailure();</span>
+<span class="lineNum">      35 </span>            :     }
+<span class="lineNum">      36 </span><span class="lineCov">          1 :     _authServiceInterface = authServiceInterface;</span>
+<span class="lineNum">      37 </span><span class="lineCov">          1 :     _authMessageBus = authMessageBus;</span>
+<span class="lineNum">      38 </span><span class="lineCov">          2 :     userStreamController = StreamController&lt;User&gt;();</span>
+<span class="lineNum">      39 </span>            :   }
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            :   @override
+<span class="lineNum">      42 </span><span class="lineCov">          1 :   Future&lt;bool&gt; signIn(</span>
+<span class="lineNum">      43 </span>            :       {@required String username, @required String password}) async {
+<span class="lineNum">      44 </span><span class="lineCov">          2 :     await signOut();</span>
+<span class="lineNum">      45 </span>            :     SignInResult signInResult =
+<span class="lineNum">      46 </span><span class="lineCov">          3 :         await _authServiceInterface.signIn(username: username, password: password);</span>
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span><span class="lineCov">          1 :     return signInResult.isSignedIn;</span>
+<span class="lineNum">      49 </span>            :   }
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            :   @override
+<span class="lineNum">      52 </span><span class="lineCov">          1 :   Future&lt;bool&gt; signOut() async {</span>
+<span class="lineNum">      53 </span><span class="lineCov">          3 :     await _authServiceInterface.signOut();</span>
+<span class="lineNum">      54 </span>            :     return true;
+<span class="lineNum">      55 </span>            :   }
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            :   @override
+<span class="lineNum">      58 </span><span class="lineCov">          1 :   Future&lt;User&gt; getCurrentUser() async {</span>
+<span class="lineNum">      59 </span><span class="lineCov">          3 :     AuthUser authUser = await _authServiceInterface.getCurrentUser();</span>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineCov">          1 :     User currentUser = User(</span>
+<span class="lineNum">      62 </span><span class="lineCov">          1 :         username: authUser.username,</span>
+<span class="lineNum">      63 </span><span class="lineCov">          1 :         id: authUser.userId,</span>
+<span class="lineNum">      64 </span>            :         firstname: null,
+<span class="lineNum">      65 </span>            :         lastname: null,
+<span class="lineNum">      66 </span>            :         grade: null);
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            :     return currentUser;
+<span class="lineNum">      69 </span>            :   }
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineCov">          1 :   @override</span>
+<span class="lineNum">      72 </span>            :   Stream&lt;User&gt; getUserStream() {
+<span class="lineNum">      73 </span><span class="lineCov">          4 :     _authMessageBus.listen([HubChannel.Auth], messageBusHandler);</span>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span><span class="lineCov">          2 :     return userStreamController.stream;</span>
+<span class="lineNum">      76 </span>            :   }
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">          1 :   void messageBusHandler(event) async {</span>
+<span class="lineNum">      79 </span><span class="lineCov">          2 :     if (event.eventName == 'SIGNED_IN') {</span>
+<span class="lineNum">      80 </span>            :       try {
+<span class="lineNum">      81 </span><span class="lineCov">          2 :         var amplifyUser = await getCurrentUser();</span>
+<span class="lineNum">      82 </span><span class="lineCov">          2 :         userStreamController.add(amplifyUser);</span>
+<span class="lineNum">      83 </span><span class="lineCov">          1 :       } on Exception {</span>
+<span class="lineNum">      84 </span><span class="lineCov">          3 :         userStreamController.addError(Exception('GetUserError'));</span>
+<span class="lineNum">      85 </span>            :       }
+<span class="lineNum">      86 </span>            :     } else {
+<span class="lineNum">      87 </span><span class="lineCov">          2 :       userStreamController.add(User.empty);</span>
+<span class="lineNum">      88 </span>            :     }
+<span class="lineNum">      89 </span>            :   }
+<span class="lineNum">      90 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
